@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CuroBot - Medical Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <h1>CuroBot 🩺</h1>
+        <div class="chat-box" id="chat-box"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Ask a medical question..." autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('chat-form');
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+    
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent actual form submission (REQUIRED)
+    
+            const msg = userInput.value.trim();
+            if (!msg) return;
+    
+            appendMessage("You", msg);
+            userInput.value = "";
+    
+            // Send POST request to Flask backend
+            fetch("/get", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `msg=${encodeURIComponent(msg)}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                appendMessage("CuroBot", data);
+            })
+            .catch(error => {
+                appendMessage("Error", "Something went wrong!");
+                console.error("Fetch error:", error);
+            });
+        });
+    
+        function appendMessage(sender, message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message");
+            messageDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
