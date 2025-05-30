@@ -24,3 +24,36 @@ conda activate curobot
 ```bash
 pip install -r requirements.txt
 ```
+
+
+### Create a `.env` file in the root directory and add your Pinecone & GroqCloud credentials as follows:
+
+```ini
+PINECONE_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+GROQ_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+
+```bash
+#run the following command to store embeddings to pinecone
+python store_index.py
+```
+
+```bash
+#Finally run the following command
+python app.py
+```
+
+Now,
+```bash
+open up localhost:
+```
+
+
+### Techstack Used:
+
+- Python
+- Langchain
+- Flask 
+- GroqCloud
+- Pinecone
